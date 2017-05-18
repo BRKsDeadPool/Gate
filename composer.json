@@ -11,8 +11,8 @@
     ],
     "minimum-stability": "stable",
     "require": {
-    	"illuminate/support": "latest",
-    	"illuminate/contracts": "latest",
-    	"illuminate/database": "latest"
+    	"illuminate/support": "5.4.*",
+    	"illuminate/contracts": "5.4.*",
+    	"illuminate/database": "5.4.*"
     }
 }
