@@ -9,7 +9,8 @@
             "email": "reginaldo.junior696@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+	"prefer-stable": true,
     "require": {
     	"illuminate/support": "5.4.*",
     	"illuminate/contracts": "5.4.*",
