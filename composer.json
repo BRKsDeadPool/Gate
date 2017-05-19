@@ -1,5 +1,5 @@
 {
-    "name": "brksdeadpoo/gate-manager",
+    "name": "brksdeadpool/gate-manager",
     "description": "A simple permissions and roles manager using laravel gate",
     "type": "library",
     "license": "MIT",
