@@ -1,5 +1,5 @@
 {
-    "name": "brksdeadpool/gate-manager",
+    "name": "brksdeadpool/gate",
     "description": "A simple permissions and roles manager using laravel gate",
     "type": "library",
     "license": "MIT",
@@ -18,7 +18,7 @@
     },
     "autoload": {
     	"psr-4": {
-    		"BRKsDeadPool\\GateManager\\":"src/"
+    		"BRKsDeadPool\\Gate\\":"src/"
     	}
     }
 }
