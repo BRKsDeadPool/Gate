@@ -3,11 +3,34 @@
 namespace BRKsDeadPool\Gate\Models;
 
 use BRKsDeadPool\Gate\Support\MakePermissionModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class Role extends Model
 {
     use MakePermissionModel;
+
+    protected static function boot()
+    {
+        parent::boot();
+        $cache = function() {
+            if (Cache::has('roles')) {
+                Cache::forget('roles');
+            }
+
+            Cache::put('roles', self::all(), Carbon::now()->addHour());
+
+            if (Cache::has('role_user')) {
+                Cache::forget('role_user');
+            }
+            Cache::put('role_user', DB::table('role_user')->get());
+        };
+        static::created($cache);
+        static::updated($cache);
+        static::deleted($cache);
+    }
 
     /**
      *  Attributes that are mass assignable
