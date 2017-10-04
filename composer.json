@@ -9,8 +9,6 @@
             "email": "reginaldo.junior696@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
-	"prefer-stable": true,
     "require": {
     	"illuminate/support": "5.4.*",
     	"illuminate/contracts": "5.4.*",
@@ -20,5 +18,10 @@
     	"psr-4": {
     		"BRKsDeadPool\\Gate\\":"src/"
     	}
-    }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
 }
