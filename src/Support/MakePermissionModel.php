@@ -2,7 +2,9 @@
 
 namespace BRKsDeadPool\Gate\Support;
 
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 trait MakePermissionModel
 {
@@ -21,5 +23,14 @@ trait MakePermissionModel
         }
 
         return $permission;
+    }
+
+    public function permissionCache()
+    {
+        if (!Cache::has('permissions')) {
+            Cache::put('permissions', $this->permissionModel()->get(), Carbon::now()->addHour());
+        }
+
+        return Cache::get('permissions');
     }
 }

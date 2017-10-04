@@ -3,6 +3,8 @@
 namespace BRKsDeadPool\Gate\Support;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 trait HasRole
 {
@@ -49,10 +51,10 @@ trait HasRole
     public function hasRole($role)
     {
         if (is_string($role)) {
-            return $this->roles->contains('name', $role);
+            return $this->userRoles()->contains('name', $role);
         }
 
-        return !!$role->intersect($this->roles)->count();
+        return !!$role->intersect($this->userRoles())->count();
     }
 
     /**
@@ -60,12 +62,17 @@ trait HasRole
      *
      * @param $permission mixed
      * @return bool
+     * @throws \Exception
      */
     public function hasPermission($permission)
     {
-        $permission = $this->permissionModel()
+        $permission = $this->permissionCache()
             ->where('name', $permission)
-            ->firstOrFail();
+            ->first();
+
+        if (!$permission) {
+            throw new \Exception('No permission found');
+        }
 
         return $this->hasRole($permission->roles);
     }
@@ -89,4 +96,17 @@ trait HasRole
         return $this->belongsToMany(config('gate.models.role'));
     }
 
+    /**
+     * @return mixed
+     */
+    public function userRoles()
+    {
+        if (!Cache::has('role_user')) {
+            Cache::put('role_user', DB::table('role_user')->get());
+        }
+
+        $roles = Cache::get('role_user');
+
+        return $roles->where('user_id', $this->id);
+    }
 }
