@@ -2,6 +2,7 @@
 
 namespace BRKsDeadPool\Gate\Support;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -27,10 +28,14 @@ trait HasRole
      */
     public function assignRole($role)
     {
-        return $this->roles()->save(
-            $this->roleModel()
-                ->where('name', $role)->firstOrFail()
-        );
+        $role = $this->roleCache()
+            ->where('name', $role)->first();
+
+        if (!$role) {
+            throw new \Exception('No Role Found');
+        }
+
+        return $this->roles()->save($role);
     }
 
     /*
@@ -102,11 +107,11 @@ trait HasRole
     public function userRoles()
     {
         if (!Cache::has('role_user')) {
-            Cache::put('role_user', DB::table('role_user')->get());
+            Cache::put('role_user', DB::table('role_user')->get(), 60);
         }
 
-        $roles = Cache::get('role_user');
+        $roles = Cache::get('role_user')->where('user_id', $this->id)->pluck('role_id')->all();
 
-        return $roles->where('user_id', $this->id);
+        return $this->roleCache()->whereIn('id', $roles);
     }
 }

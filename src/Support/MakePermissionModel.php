@@ -28,9 +28,14 @@ trait MakePermissionModel
     public function permissionCache()
     {
         if (!Cache::has('permissions')) {
-            Cache::put('permissions', $this->permissionModel()->get(), Carbon::now()->addHour());
+            $this->cachePermissions();
         }
 
         return Cache::get('permissions');
+    }
+
+    public function cachePermissions()
+    {
+        Cache::put('permissions', $this->permissionModel()->get(), Carbon::now()->addHour());
     }
 }
