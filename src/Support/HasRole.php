@@ -35,7 +35,11 @@ trait HasRole
             throw new \Exception('No Role Found');
         }
 
-        return $this->roles()->save($role);
+        $model = $this->roles()->save($role);
+
+        Cache::forget('role_user');
+
+        return $model;
     }
 
     /*
