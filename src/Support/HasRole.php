@@ -25,6 +25,7 @@ trait HasRole
      *
      * @param $role string
      * @return mixed
+     * @throws \Exception
      */
     public function assignRole($role)
     {
