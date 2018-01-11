@@ -6,6 +6,8 @@ use BRKsDeadPool\Gate\Contracts\PermissionManager as PermissionManagerContract;
 use BRKsDeadPool\Gate\Contracts\RoleManager as RoleManagerContract;
 use BRKsDeadPool\Gate\Manager\PermissionManager;
 use BRKsDeadPool\Gate\Manager\RoleManager;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Exception;
@@ -77,12 +79,18 @@ class GateServiceProvider extends ServiceProvider
             return collect([]);
         }
 
+        if (Cache::has('permission_model')) {
+            return Cache::get('permission_model');
+        }
+
         $permissions = $this->app->make(config('gate.models.permission'));
 
         if (!$permissions instanceof \Illuminate\Database\Eloquent\Model) {
             throw new Exception('Class ' . config('gate.models.permission') . 'must be instance of Illuminate\\Database\\Eloquent\\Model');
         }
 
-        return $permissions->with('roles')->get();
+        Cache::put('permission_model', $permissions->with('roles')->get(), Carbon::now()->addHour());
+
+        return $this->permissions();
     }
 }
